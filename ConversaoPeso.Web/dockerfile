@@ -1,0 +1,11 @@
+FROM .net core as build
+WORKDIR /aplicacao
+COPY ConversaoPeso.Web.csproj ./
+RUN dotnet restore
+COPY . .
+RUN dotnet publish -c Release -o out
+
+FROM .net core sdk
+WORKDIR /aplicacao
+COPY --from=build /aplicacao/out .
+ENTRYPOINT ["dotnet", "aspnetapp.dll"]
